@@ -1,4 +1,4 @@
-export interface Transaction {
+export interface LoyaltyCardTransaction {
   id: string;
   customerId: string;
   customerName: string;
