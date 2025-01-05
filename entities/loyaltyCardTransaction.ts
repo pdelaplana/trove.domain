@@ -15,14 +15,14 @@ export interface LoyaltyCardTransaction {
 
   transactionDate: Date;
 
-  totalAmount: number;
+  purchaseAmount: number;
   discountAmount: number;
   finalAmount: number;
 
-  pointsEarned: number;
-  pointsBonus: number;
-  pointsRedeemed: number;
-  pointsBalance: number;
+  earnedPoints: number;
+  bonusPoints: number;
+  redeemedPoints: number;
+  totalPoints: number;
 
   rewardsEarned: string[];
 }
