@@ -1,7 +1,7 @@
 import { Business } from "./entities/business";
 import { Customer } from "./entities/customer";
 import { LoyaltyCard } from "./entities/loyaltyCard";
-import { LoyaltyCardTransaction } from "./entities/loyaltyCardtransaction";
+import { LoyaltyCardTransaction } from "./entities/loyaltyCardTransaction";
 import {
   LoyaltyProgram,
   LoyaltyProgramMilestone,
