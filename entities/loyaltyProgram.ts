@@ -13,6 +13,7 @@ export type LoyaltyProgramTierPerkType =
 
 export interface LoyaltyProgram {
   id: string;
+  businessId: string;
   uniqueCode: string;
   name: string;
   type: LoyaltyProgramType;
