@@ -1,6 +1,7 @@
 import { LoyaltyProgramRewardType } from './loyaltyProgram';
 
 export interface CustomerReward {
+  id: string;
   customerId: string;
   businessId: string;
   loyaltyProgramId: string;
@@ -15,7 +16,7 @@ export interface CustomerRewardDiscountPercentage extends CustomerReward {
   discountPercentage: number;
 }
 
-export interface CustomerRewardDiscountFixedAmounnt extends CustomerReward {
+export interface CustomerRewardDiscountFixedAmount extends CustomerReward {
   discountFixedAmount: number;
 }
 

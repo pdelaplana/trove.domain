@@ -4,7 +4,8 @@ export type LoyaltyProgramRewardType =
   | 'discountPercentage'
   | 'discountFixedAmount'
   | 'freeProduct'
-  | 'pointsBonus';
+  | 'pointsBonus'
+  | 'promoCode';
 
 export type LoyaltyProgramTierPerkType =
   | 'discount'
@@ -28,7 +29,6 @@ export interface LoyaltyProgramMilestone {
   id: string;
   tierId?: string;
   points: number;
-  expiryInDays?: number;
   reward: LoyaltyProgramReward;
 }
 
@@ -49,11 +49,26 @@ export interface LoyaltyProgramTierPerk {
 export interface LoyaltyProgramReward {
   name: string;
   rewardType: LoyaltyProgramRewardType;
-  discountPercentage?: number;
+  expiryInDays?: number;
+}
+
+export interface LoyaltyProgramRewardDiscountFixedAmount
+  extends LoyaltyProgramReward {
   discountFixedAmount?: number;
-  freeProduct?: string;
-  freeProductQuantity?: number;
-  pointsBonus?: number;
+}
+
+export interface LoyaltyProgramRewardPointsBonus extends LoyaltyProgramReward {
+  pointsBonus: number;
+}
+
+export interface LoyaltyProgramRewardDiscountPercentage
+  extends LoyaltyProgramReward {
+  discountPercentage: number;
+}
+
+export interface LoyaltyProgramRewardFreeProduct extends LoyaltyProgramReward {
+  freeProduct: string;
+  freeProductQuantity: number;
 }
 
 export const useLoyaltyProgramValidationRules = () => ({

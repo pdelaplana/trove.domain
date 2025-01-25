@@ -6,6 +6,7 @@ import {
   LoyaltyProgram,
   LoyaltyProgramMilestone,
   LoyaltyProgramReward,
+  LoyaltyProgramRewardType,
   LoyaltyProgramTier,
   LoyaltyProgramTierPerk,
 } from './entities/loyaltyProgram';
@@ -24,4 +25,5 @@ export type {
   LoyaltyProgramTierPerk,
   LoyaltyCard,
   LoyaltyCardTransaction,
+  LoyaltyProgramRewardType,
 };
