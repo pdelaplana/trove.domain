@@ -5,11 +5,13 @@ import { LoyaltyCardTransaction } from './entities/loyaltyCardTransaction';
 import {
   LoyaltyProgram,
   LoyaltyProgramMilestone,
-  LoyaltyProgramReward,
-  LoyaltyProgramRewardType,
   LoyaltyProgramTier,
   LoyaltyProgramTierPerk,
 } from './entities/loyaltyProgram';
+import {
+  LoyaltyProgramReward,
+  LoyaltyProgramRewardType,
+} from './entities/loyaltyProgramReward';
 import { Address } from './valueTypes/address';
 import { OperatingHours } from './valueTypes/operatingHours';
 
