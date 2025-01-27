@@ -1,5 +1,6 @@
 import { Business } from './entities/business';
 import { Customer } from './entities/customer';
+import { CustomerReward } from './entities/customerReward';
 import { LoyaltyCard } from './entities/loyaltyCard';
 import { LoyaltyCardTransaction } from './entities/loyaltyCardTransaction';
 import {
@@ -28,4 +29,5 @@ export type {
   LoyaltyCard,
   LoyaltyCardTransaction,
   LoyaltyProgramRewardType,
+  CustomerReward,
 };

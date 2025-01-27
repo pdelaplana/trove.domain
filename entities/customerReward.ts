@@ -8,6 +8,7 @@ export interface CustomerReward {
   loyaltyCardId: string;
   claimedDate?: Date;
   expiryDate?: Date;
+  validUntilDate?: Date;
   redeemedDate?: Date;
   rewardType: LoyaltyProgramRewardType;
   name: string;

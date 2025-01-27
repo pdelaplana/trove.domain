@@ -36,11 +36,6 @@ export interface LoyaltyProgramRewardFreeProduct extends LoyaltyProgramReward {
   freeProductQuantity: number;
 }
 
-export interface LoyaltyProgramRewardFreeProduct extends LoyaltyProgramReward {
-  freeProduct: string;
-  freeProductQuantity: number;
-}
-
 export interface LoyaltyProgramRewardPromoCode extends LoyaltyProgramReward {
   promoCode: string;
 }
