@@ -22,6 +22,8 @@ export interface LoyaltyProgram {
 
 export interface LoyaltyProgramMilestone {
   id: string;
+  businessId: string;
+  loyaltyProgramId: string;
   tierId?: string;
   points: number;
   reward: LoyaltyProgramReward;
