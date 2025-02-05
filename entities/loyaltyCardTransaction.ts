@@ -1,3 +1,10 @@
+export type LoyaltyCardTransactionType =
+  | 'purchase'
+  | 'refund'
+  | 'bonus'
+  | 'redeem'
+  | 'manual';
+
 export interface LoyaltyCardTransaction {
   id: string;
   customerId: string;
@@ -14,6 +21,7 @@ export interface LoyaltyCardTransaction {
   loyaltyProgramTierName?: string;
 
   transactionDate: Date;
+  transactionType: LoyaltyCardTransactionType;
 
   purchaseAmount: number;
   discountAmount: number;
