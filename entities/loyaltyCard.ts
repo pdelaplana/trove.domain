@@ -11,7 +11,8 @@ export interface LoyaltyCard {
   loyaltyProgramName: string;
   tierId?: string;
   tierName?: string;
-  points: number;
+  tierPoints: number;
+  rewardPoints: number;
   stamps: number;
   membershipDate: Date;
   expiryDate?: Date;
