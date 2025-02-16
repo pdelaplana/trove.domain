@@ -6,9 +6,9 @@ export interface CustomerReward {
   businessId: string;
   loyaltyProgramId: string;
   loyaltyCardId: string;
+  loyaltyProgramMilestoneId: string;
   claimedDate?: Date;
   expiryDate?: Date;
-  validUntilDate?: Date;
   redeemedDate?: Date;
   rewardType: LoyaltyProgramRewardType;
   name: string;

@@ -25,19 +25,21 @@ import { pipe, Result } from './helpers';
 import { RewardClaimedEvent } from '../events/rewardEvents';
 import { EventBus } from '../events/eventBus';
 import { RedemptionAggregate } from '../aggregates/redemptionAggregate';
+import { RewardClaimedAggregate } from '../aggregates/rewardClaimedAggregate';
 
 interface TransactionContext {
   readonly loyaltyCard: LoyaltyCard;
   readonly business: Business;
   readonly customer: Customer;
   readonly loyaltyProgramMilestone: LoyaltyProgramMilestone;
+  readonly customerRewards: CustomerReward[];
   readonly transactionType: LoyaltyCardTransactionType;
 }
 
 const initializeTransaction = (
   context: TransactionContext,
-  aggregate: RedemptionAggregate
-): Result<TransactionContext, RedemptionAggregate> => {
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
   try {
     const transaction: Omit<LoyaltyCardTransaction, 'id'> = {
       businessId: context.business.id,
@@ -77,10 +79,55 @@ const initializeTransaction = (
   }
 };
 
+const checkIfRewardHasNotExpired = (
+  context: TransactionContext,
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
+  const { loyaltyProgramMilestone } = context;
+
+  if (
+    loyaltyProgramMilestone.reward.validUntilDate &&
+    loyaltyProgramMilestone.reward.validUntilDate < new Date()
+  ) {
+    return {
+      success: false,
+      context,
+      aggregate,
+      error: new Error('Reward has expired.'),
+    };
+  }
+
+  return { success: true, context, aggregate };
+};
+
+const checkIfRewardAlreadyClaimed = (
+  context: TransactionContext,
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
+  const { loyaltyProgramMilestone, customerRewards } = context;
+
+  if (
+    customerRewards &&
+    customerRewards.some(
+      (reward) =>
+        reward.loyaltyProgramMilestoneId === loyaltyProgramMilestone.id
+    )
+  ) {
+    return {
+      success: false,
+      context,
+      aggregate,
+      error: new Error('Reward already claimed.'),
+    };
+  }
+
+  return { success: true, context, aggregate };
+};
+
 const checkPointsBalance = (
   context: TransactionContext,
-  aggregate: RedemptionAggregate
-): Result<TransactionContext, RedemptionAggregate> => {
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
   const { loyaltyCard, loyaltyProgramMilestone } = context;
 
   if (loyaltyCard.rewardPoints < loyaltyProgramMilestone.points) {
@@ -97,8 +144,8 @@ const checkPointsBalance = (
 
 const redeemPoints = (
   context: TransactionContext,
-  aggregate: RedemptionAggregate
-): Result<TransactionContext, RedemptionAggregate> => {
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
   try {
     const { loyaltyProgramMilestone } = context;
     const { transaction } = aggregate;
@@ -128,8 +175,8 @@ const redeemPoints = (
 
 const updateCardBalance = (
   context: TransactionContext,
-  aggregate: RedemptionAggregate
-): Result<TransactionContext, RedemptionAggregate> => {
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
   const { transaction, loyaltyCard } = aggregate;
 
   loyaltyCard.rewardPoints =
@@ -147,26 +194,32 @@ const updateCardBalance = (
 
 const createCustomerReward = (
   context: TransactionContext,
-  aggregate: RedemptionAggregate
-): Result<TransactionContext, RedemptionAggregate> => {
+  aggregate: RewardClaimedAggregate
+): Result<TransactionContext, RewardClaimedAggregate> => {
   const { customer, business, loyaltyProgramMilestone } = context;
   const { loyaltyCard } = aggregate;
+
+  const expirydate = new Date(
+    Date.now() +
+      (loyaltyProgramMilestone.reward.expiryInDays ?? 0) * 24 * 60 * 60 * 1000
+  );
 
   let customerReward: Omit<CustomerReward, 'id'> = {
     customerId: customer.id,
     businessId: business.id,
     loyaltyCardId: loyaltyCard.id,
     loyaltyProgramId: loyaltyCard.loyaltyProgramId,
+    loyaltyProgramMilestoneId: loyaltyProgramMilestone.id,
     rewardType: loyaltyProgramMilestone.reward.rewardType,
     name: loyaltyProgramMilestone.reward.name,
     description: loyaltyProgramMilestone.reward.description,
     imageUrl: loyaltyProgramMilestone.reward.imageUrl,
     termsAndConditions: loyaltyProgramMilestone.reward.termsAndConditions,
-    validUntilDate: loyaltyProgramMilestone.reward.validUntilDate ?? undefined,
-    expiryDate: new Date(
-      Date.now() +
-        (loyaltyProgramMilestone.reward.expiryInDays ?? 0 * 24 * 60 * 60 * 1000)
-    ),
+    expiryDate: loyaltyProgramMilestone.reward.validUntilDate
+      ? loyaltyProgramMilestone.reward.validUntilDate > expirydate
+        ? expirydate
+        : loyaltyProgramMilestone.reward.validUntilDate
+      : expirydate,
     claimedDate: new Date(),
   };
 
@@ -228,7 +281,7 @@ const createCustomerReward = (
   };
 };
 
-export const processRedemption = async (
+const processClaimReward = async (
   initialContext: TransactionContext,
   eventBus: EventBus
 ): Promise<{
@@ -241,6 +294,8 @@ export const processRedemption = async (
 }> => {
   const result = pipe(
     initializeTransaction,
+    checkIfRewardHasNotExpired,
+    checkIfRewardAlreadyClaimed,
     checkPointsBalance,
     redeemPoints,
     updateCardBalance,
@@ -260,7 +315,8 @@ export const processRedemption = async (
     });
     return {
       success: false,
-      error: result.error || new Error('Transaction processing failed'),
+      error:
+        result.error?.message || new Error('Transaction processing failed'),
     };
   }
   const event = {
@@ -284,3 +340,5 @@ export const processRedemption = async (
     },
   };
 };
+
+export default processClaimReward;
