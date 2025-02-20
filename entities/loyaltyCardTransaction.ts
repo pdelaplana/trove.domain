@@ -23,6 +23,7 @@ export interface LoyaltyCardTransaction {
   transactionDate: Date;
   transactionType: LoyaltyCardTransactionType;
 
+  currency: string;
   purchaseAmount: number;
   discountAmount: number;
   finalAmount: number;

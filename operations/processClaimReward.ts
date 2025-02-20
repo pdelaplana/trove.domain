@@ -56,6 +56,7 @@ const initializeTransaction = (
       membershipNumber: context.loyaltyCard.membershipNumber,
       transactionDate: new Date(),
       transactionType: context.transactionType,
+      currency: context.business.currency,
       purchaseAmount: 0,
       discountAmount: 0,
       finalAmount: 0,

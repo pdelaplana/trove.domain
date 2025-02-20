@@ -47,7 +47,6 @@ const calculatePerkBenefits = (
       discountAmount = amount * ((perk.discountPercentage ?? 0) / 100);
       return {
         discountAmount,
-        finalAmount: amount - discountAmount,
       };
     case 'pointsBonus':
       return {
@@ -86,6 +85,7 @@ const initializeTransaction: PipeFunction<
       membershipNumber: context.loyaltyCard.membershipNumber,
       transactionDate: new Date(),
       transactionType: context.transactionType,
+      currency: context.business.currency,
       purchaseAmount: context.amount,
       discountAmount: 0,
       finalAmount: 0,
@@ -137,6 +137,8 @@ const calculateRewards = (
         (transaction.earnedPoints as number) +
         ((transaction.bonusPoints as number) || 0);
     }
+    transaction.finalAmount =
+      transaction.purchaseAmount - (transaction.discountAmount || 0);
 
     return {
       success: true,
@@ -157,9 +159,6 @@ const evaluateTierProgression = (
 ): Result<TransactionContext, PointsEarnedAggregate> => {
   try {
     const { loyaltyProgram } = context;
-
-    //const event = extractEvent('LoyaltyPointsEarned', context.events);
-
     const { loyaltyCard, transaction } = aggregate;
 
     const currentPoints =
