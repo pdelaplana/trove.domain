@@ -79,4 +79,6 @@ const updateEventPayload = (
   );
 };
 
-export type { Result, PipeFunction, pipe, extractEvent, updateEventPayload };
+export type { Result, PipeFunction };
+
+export { extractEvent, updateEventPayload, pipe };
