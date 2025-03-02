@@ -14,6 +14,7 @@ export interface Business {
   operatingHours: OperatingHours[];
   address: Address;
   currency: CurrencyCode;
+  phoneCountryCode: string;
   loyaltyPrograms: LoyaltyProgram[];
 }
 
