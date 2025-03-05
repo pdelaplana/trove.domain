@@ -33,5 +33,5 @@ export interface LoyaltyCardTransaction {
   redeemedPoints: number;
   totalPoints: number;
 
-  rewardsEarned: string[];
+  freeProducts?: string[];
 }

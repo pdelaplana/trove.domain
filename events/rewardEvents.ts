@@ -18,3 +18,19 @@ export interface RewardClaimFailedEvent extends DomainEvent {
     readonly error: string;
   };
 }
+
+export interface RewardRedemptionEvent extends DomainEvent {
+  readonly type: 'RewardRedemption';
+  readonly payload: {
+    readonly customerReward: CustomerReward;
+    readonly loyaltyCard: LoyaltyCard;
+    readonly loyaltyCardTransaction: Omit<LoyaltyCardTransaction, 'id'>;
+  };
+}
+
+export interface RewardRedemptionFailedEvent extends DomainEvent {
+  readonly type: 'RewardRedemptionFailed';
+  readonly payload: {
+    readonly error: string;
+  };
+}

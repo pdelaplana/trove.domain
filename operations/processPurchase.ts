@@ -54,7 +54,7 @@ const calculatePerkBenefits = (
       };
     case 'freeProduct':
       return {
-        rewardsEarned: perk.freeProduct ? [perk.freeProduct] : [],
+        freeProducts: perk.freeProduct ? [perk.freeProduct] : [],
       };
     default:
       return {};
@@ -93,7 +93,6 @@ const initializeTransaction: PipeFunction<
       bonusPoints: 0,
       redeemedPoints: 0,
       totalPoints: 0,
-      rewardsEarned: [],
     };
 
     const aggregate = {

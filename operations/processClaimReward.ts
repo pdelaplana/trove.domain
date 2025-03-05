@@ -24,7 +24,6 @@ import {
 import { pipe, Result } from './helpers';
 import { RewardClaimedEvent } from '../events/rewardEvents';
 import { EventBus } from '../events/eventBus';
-import { RedemptionAggregate } from '../aggregates/redemptionAggregate';
 import { RewardClaimedAggregate } from '../aggregates/rewardClaimedAggregate';
 
 interface TransactionContext {
@@ -64,7 +63,6 @@ const initializeTransaction = (
       bonusPoints: 0,
       redeemedPoints: 0,
       totalPoints: 0,
-      rewardsEarned: [],
     };
 
     return {
@@ -305,7 +303,7 @@ const processClaimReward = async (
     loyaltyCard: initialContext.loyaltyCard,
     transaction: {} as LoyaltyCardTransaction,
     reward: {} as CustomerReward,
-  } as RedemptionAggregate);
+  } as RewardClaimedAggregate);
 
   if (!result.success || !result.aggregate || result.error) {
     await eventBus.publish({
