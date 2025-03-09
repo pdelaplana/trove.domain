@@ -220,6 +220,7 @@ const createCustomerReward = (
         : loyaltyProgramMilestone.reward.validUntilDate
       : expirydate,
     claimedDate: new Date(),
+    redeemedDate: null,
   };
 
   switch (loyaltyProgramMilestone.reward.rewardType) {

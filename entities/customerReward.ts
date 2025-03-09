@@ -9,7 +9,7 @@ export interface CustomerReward {
   loyaltyProgramMilestoneId: string;
   claimedDate?: Date;
   expiryDate?: Date;
-  redeemedDate?: Date;
+  redeemedDate?: Date | null;
   rewardType: LoyaltyProgramRewardType;
   name: string;
   description?: string;
